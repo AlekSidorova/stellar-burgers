@@ -1,43 +1,50 @@
 import { FC, useMemo } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { RootState } from '../../services/store';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { createOrder, clearOrder } from '../../features/orders/orders-slice';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
+  const dispatch = useDispatch();
 
-  const orderRequest = false;
-
-  const orderModalData = null;
-
-  const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
-  };
-  const closeOrderModal = () => {};
-
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
+  const { bun, ingredients } = useSelector(
+    (state: RootState) => state.constructor
+  );
+  const { orderNumber, isLoading } = useSelector(
+    (state: RootState) => state.orders
   );
 
-  return null;
+  // Считаем общую цену
+  const price = useMemo(() => {
+    const ingredientsPrice =
+      ingredients?.reduce(
+        (sum: number, item: TConstructorIngredient) => sum + item.price,
+        0
+      ) || 0;
+
+    return (bun?.price || 0) * 2 + ingredientsPrice;
+  }, [bun, ingredients]);
+
+  // Кнопка оформления заказа
+  const onOrderClick = () => {
+    if (!bun || isLoading) return;
+    const ids = [
+      bun._id,
+      ...ingredients.map((i: TConstructorIngredient) => i._id)
+    ];
+    dispatch(createOrder(ids));
+  };
+
+  // Закрытие модалки
+  const closeOrderModal = () => dispatch(clearOrder());
 
   return (
     <BurgerConstructorUI
+      constructorItems={{ bun, ingredients: ingredients || [] }}
       price={price}
-      orderRequest={orderRequest}
-      constructorItems={constructorItems}
-      orderModalData={orderModalData}
+      orderRequest={isLoading}
+      orderModalData={orderNumber ? { number: orderNumber } : null}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
     />

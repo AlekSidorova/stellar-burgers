@@ -8,11 +8,13 @@ import {
 import userReducer from '../features/user/user-slice';
 import ordersReducer from '../features/orders/orders-slice';
 import ingredientsReducer from '../features/ingredients/ingredients-slice';
+import constructorReducer from '../features/constructor/constructor-slice';
 
 const rootReducer = combineReducers({
   user: userReducer,
   orders: ordersReducer,
-  ingredients: ingredientsReducer
+  ingredients: ingredientsReducer,
+  constructor: constructorReducer
 });
 
 const store = configureStore({
