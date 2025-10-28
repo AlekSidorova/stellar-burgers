@@ -4,6 +4,7 @@ import { Tab } from '@zlden/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import { BurgerIngredientsUIProps } from './type';
 import { IngredientsCategory } from '@components';
+import { TTabMode } from '../../../utils/types';
 
 export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
   ({
@@ -23,20 +24,24 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
       <section className={styles.burger_ingredients}>
         <nav>
           <ul className={styles.menu}>
-            <Tab value='bun' active={currentTab === 'bun'} onClick={onTabClick}>
+            <Tab
+              value='bun'
+              active={currentTab === 'bun'}
+              onClick={(val: string) => onTabClick(val as TTabMode)}
+            >
               Булки
             </Tab>
             <Tab
               value='main'
               active={currentTab === 'main'}
-              onClick={onTabClick}
+              onClick={(val: string) => onTabClick(val as TTabMode)}
             >
               Начинки
             </Tab>
             <Tab
               value='sauce'
               active={currentTab === 'sauce'}
-              onClick={onTabClick}
+              onClick={(val: string) => onTabClick(val as TTabMode)}
             >
               Соусы
             </Tab>
