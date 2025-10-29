@@ -1,9 +1,10 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { RootState } from '../../services/store';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { createOrder, clearOrder } from '../../features/orders/orders-slice';
+import { clearConstructor } from '../../features/constructor/constructor-slice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,13 @@ export const BurgerConstructor: FC = () => {
 
   // Закрытие модалки
   const closeOrderModal = () => dispatch(clearOrder());
+
+  // Очистка конструктора после успешного заказа
+  useEffect(() => {
+    if (orderNumber) {
+      dispatch(clearConstructor());
+    }
+  }, [orderNumber, dispatch]);
 
   return (
     <BurgerConstructorUI
