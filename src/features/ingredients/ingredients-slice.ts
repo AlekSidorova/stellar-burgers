@@ -1,23 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { TIngredient } from '@utils-types';
 import { getIngredientsApi } from '../../utils/burger-api';
-import { TIngredient } from '../../utils/types';
 
 interface IngredientsState {
   ingredients: TIngredient[];
   isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: IngredientsState = {
   ingredients: [],
-  isLoading: false
+  isLoading: false,
+  error: null
 };
 
-// Thunk для загрузки ингредиентов
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
-    const data = await getIngredientsApi();
-    return data;
+    const ingredients = await getIngredientsApi();
+    return ingredients;
   }
 );
 
@@ -29,13 +30,15 @@ const ingredientsSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.ingredients = action.payload;
-        state.isLoading = false;
       })
-      .addCase(fetchIngredients.rejected, (state) => {
+      .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message || 'Ошибка загрузки';
       });
   }
 });

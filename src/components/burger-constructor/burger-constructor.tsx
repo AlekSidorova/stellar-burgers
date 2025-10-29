@@ -9,7 +9,7 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
 
   const { bun, ingredients } = useSelector(
-    (state: RootState) => state.constructor
+    (state: RootState) => state.burgerConstructor
   );
   const { orderNumber, isLoading } = useSelector(
     (state: RootState) => state.orders

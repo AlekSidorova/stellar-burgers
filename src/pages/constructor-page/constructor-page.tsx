@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import styles from './constructor-page.module.css';
 
 import { ConstructorPageUI } from '../.././components/ui/pages/constructor-page';
 import { fetchIngredients } from '../../features/ingredients/ingredients-slice';

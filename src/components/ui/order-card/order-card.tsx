@@ -4,7 +4,6 @@ import {
   CurrencyIcon,
   FormattedDate
 } from '@zlden/react-developer-burger-ui-components';
-
 import styles from './order-card.module.css';
 
 import { OrderCardUIProps } from './type';
@@ -29,38 +28,36 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
       <h4 className={`pt-6 text text_type_main-medium ${styles.order_name}`}>
         {orderInfo.name}
       </h4>
-      {location.pathname === '/profile/orders' && (
-        <OrderStatus status={orderInfo.status} />
-      )}
+      <OrderStatus status={orderInfo.status} />
       <div className={`pt-6 ${styles.order_content}`}>
         <ul className={styles.ingredients}>
           {orderInfo.ingredientsToShow.map((ingredient, index) => {
-            let zIndex = maxIngredients - index;
-            let right = 20 * index;
+            const zIndex = maxIngredients - index;
+            const right = 20 * index;
             return (
               <li
                 className={styles.img_wrap}
-                style={{ zIndex: zIndex, right: right }}
+                style={{ zIndex, right }}
                 key={index}
               >
                 <img
                   style={{
                     opacity:
                       orderInfo.remains && maxIngredients === index + 1
-                        ? '0.5'
-                        : '1'
+                        ? 0.5
+                        : 1
                   }}
                   className={styles.img}
                   src={ingredient.image_mobile}
                   alt={ingredient.name}
                 />
-                {maxIngredients === index + 1 ? (
+                {maxIngredients === index + 1 && orderInfo.remains > 0 && (
                   <span
                     className={`text text_type_digits-default ${styles.remains}`}
                   >
-                    {orderInfo.remains > 0 ? `+${orderInfo.remains}` : null}
+                    +{orderInfo.remains}
                   </span>
-                ) : null}
+                )}
               </li>
             );
           })}

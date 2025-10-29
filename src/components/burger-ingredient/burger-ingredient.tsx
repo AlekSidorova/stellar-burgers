@@ -1,24 +1,31 @@
 import { FC, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch } from '../../services/store';
+import { addIngredient } from '../../features/constructor/constructor-slice';
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
-    const location = useLocation(); // ← запоминаем текущий маршрут
-    const handleAdd = () => {};
+    const location = useLocation();
+    const dispatch = useDispatch();
+
+    // функция добавления ингредиента
+    const handleAddClick = () => {
+      const ingredientWithId = { ...ingredient, id: crypto.randomUUID() };
+      dispatch(addIngredient(ingredientWithId));
+    };
 
     return (
       <Link
         to={`/ingredients/${ingredient._id}`}
-        state={{ background: location }} // ← сохраняем, чтобы модалка знала “откуда пришли”
+        state={{ background: location }} // чтобы модалка знала "откуда пришли"
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
         <BurgerIngredientUI
           ingredient={ingredient}
           count={count}
-          locationState={{ background: location }}
-          handleAdd={handleAdd}
+          handleAdd={handleAddClick} // теперь тип согласован
         />
       </Link>
     );

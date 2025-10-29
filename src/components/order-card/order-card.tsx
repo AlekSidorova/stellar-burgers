@@ -1,4 +1,4 @@
-import { FC, memo, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { OrderCardProps } from './type';
@@ -7,24 +7,21 @@ import { OrderCardUI } from '../ui/order-card';
 
 const maxIngredients = 6;
 
-export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
+export const OrderCard: FC<OrderCardProps> = ({ order }) => {
   const location = useLocation();
 
-  /** TODO: взять переменную из стора */
+  /** TODO: взять ингредиенты из Redux store */
   const ingredients: TIngredient[] = [];
 
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 
-    const ingredientsInfo = order.ingredients.reduce(
-      (acc: TIngredient[], item: string) => {
-        const ingredient = ingredients.find((ing) => ing._id === item);
-        if (ingredient) return [...acc, ingredient];
-        return acc;
-      },
-      []
-    );
+    // Находим данные ингредиентов по их _id
+    const ingredientsInfo = order.ingredients
+      .map((id) => ingredients.find((ing) => ing._id === id))
+      .filter((ing): ing is TIngredient => !!ing);
 
+    // Считаем общую цену
     const total = ingredientsInfo.reduce((acc, item) => acc + item.price, 0);
 
     const ingredientsToShow = ingredientsInfo.slice(0, maxIngredients);
@@ -34,14 +31,13 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
         ? ingredientsInfo.length - maxIngredients
         : 0;
 
-    const date = new Date(order.createdAt);
     return {
       ...order,
       ingredientsInfo,
       ingredientsToShow,
       remains,
       total,
-      date
+      date: new Date(order.createdAt) // Date создаётся только для UI
     };
   }, [order, ingredients]);
 
@@ -51,7 +47,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
     <OrderCardUI
       orderInfo={orderInfo}
       maxIngredients={maxIngredients}
-      locationState={{ background: location }}
+      locationState={{ background: location }} // Location тоже только для UI
     />
   );
-});
+};
