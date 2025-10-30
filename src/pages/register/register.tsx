@@ -23,7 +23,6 @@ export const Register: FC = () => {
       await dispatch(
         registerUserThunk({ name: userName, email, password })
       ).unwrap();
-      // после успешной регистрации редиректим на /profile
       navigate('/profile', { replace: true });
     } catch (err: any) {
       setErrorText(err || 'Ошибка при регистрации');
@@ -40,7 +39,7 @@ export const Register: FC = () => {
       setPassword={setPassword}
       handleSubmit={handleSubmit}
       errorText={errorText}
-      isLoading={isLoading} // кнопка может быть заблокирована в UI
+      isLoading={isLoading}
     />
   );
 };

@@ -1,8 +1,8 @@
-import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { RootState } from '../../services/store';
 import { updateUserThunk } from '../../features/user/user-slice';
+import { ProfileUI } from '@ui-pages';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
@@ -27,9 +27,10 @@ export const Profile: FC = () => {
   }, [user]);
 
   const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
-    !!formValue.password;
+    user &&
+    (formValue.name !== user.name ||
+      formValue.email !== user.email ||
+      !!formValue.password);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -61,10 +62,13 @@ export const Profile: FC = () => {
     }));
   };
 
+  // Защита на случай, если user вдруг null
+  if (!user) return null;
+
   return (
     <ProfileUI
       formValue={formValue}
-      isFormChanged={isFormChanged}
+      isFormChanged={!!isFormChanged}
       updateUserError={updateUserError ?? undefined}
       handleSubmit={handleSubmit}
       handleCancel={handleCancel}

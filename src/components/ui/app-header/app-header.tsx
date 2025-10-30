@@ -12,9 +12,6 @@ import {
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
   const location = useLocation();
 
-  // Проверим, что пользователь находится в профиле или его вложенных маршрутах
-  const isProfileActive = location.pathname.startsWith('/profile');
-
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
@@ -64,10 +61,16 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
           <NavLink
             to='/profile'
             className={`${styles.link} ${
-              isProfileActive ? styles.link_active : ''
+              location.pathname.startsWith('/profile') ? styles.link_active : ''
             }`}
           >
-            <ProfileIcon type={isProfileActive ? 'primary' : 'secondary'} />
+            <ProfileIcon
+              type={
+                location.pathname.startsWith('/profile')
+                  ? 'primary'
+                  : 'secondary'
+              }
+            />
             <p className='text text_type_main-default ml-2'>
               {userName || 'Личный кабинет'}
             </p>
