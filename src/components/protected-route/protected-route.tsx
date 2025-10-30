@@ -4,8 +4,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { RootState } from '../../services/store';
 
 interface ProtectedRouteProps {
-  children?: React.ReactNode; // обязательно для вложенных компонентов
-  redirectIfAuth?: boolean; // для страниц авторизации
+  children?: React.ReactNode;
+  redirectIfAuth?: boolean; // для страниц авторизации (login, register)
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -16,15 +16,21 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     (state: RootState) => state.user
   );
 
-  // Пока данные загружаются или ещё не инициализированы
-  if (isLoading || !isInit) return <div>Загрузка...</div>;
+  // Пока данные пользователя загружаются или не инициализированы — показываем loader
+  if (!isInit || isLoading) {
+    return <div>Загрузка...</div>;
+  }
 
-  // Если это страница авторизации и пользователь уже авторизован — редирект на /
-  if (redirectIfAuth && user) return <Navigate to='/' replace />;
+  // Страница авторизации, но пользователь уже авторизован — редирект на /
+  if (redirectIfAuth && user) {
+    return <Navigate to='/' replace />;
+  }
 
-  // Если защищённая страница и нет пользователя — редирект на /login
-  if (!redirectIfAuth && !user) return <Navigate to='/login' replace />;
+  // Защищённая страница, но пользователь не авторизован — редирект на /login
+  if (!redirectIfAuth && !user) {
+    return <Navigate to='/login' replace />;
+  }
 
-  // Рендерим children, если переданы, иначе Outlet для вложенных Route
+  // Если всё ок — рендерим children или Outlet для вложенных маршрутов
   return <>{children ?? <Outlet />}</>;
 };

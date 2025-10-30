@@ -3,6 +3,9 @@ import styles from './app.module.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../../services/store';
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { getUserThunk } from '../../features/user/user-slice';
 
 import {
   ConstructorPage,
@@ -23,6 +26,12 @@ import { ProtectedRoute } from '../protected-route/protected-route';
 const AppContent = () => {
   const location = useLocation();
   const background = location.state?.background;
+  const dispatch = useDispatch();
+
+  // Добавляем автологин при старте приложения
+  useEffect(() => {
+    dispatch(getUserThunk());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>

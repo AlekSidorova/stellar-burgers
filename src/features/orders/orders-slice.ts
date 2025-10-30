@@ -1,17 +1,24 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '../../utils/burger-api';
+import { orderBurgerApi, getOrdersApi } from '../../utils/burger-api';
+import { TOrder } from '../../utils/types';
 
 interface OrderState {
   orderNumber: number | null;
   isLoading: boolean;
+  userOrders: TOrder[]; // массив заказов пользователя
+  userOrdersLoading: boolean; // статус загрузки заказов
+  userOrdersError: string | null; // ошибка загрузки заказов
 }
 
 const initialState: OrderState = {
   orderNumber: null,
-  isLoading: false
+  isLoading: false,
+  userOrders: [],
+  userOrdersLoading: false,
+  userOrdersError: null
 };
 
-// Создание заказа
+// Thunk для создания нового заказа
 export const createOrder = createAsyncThunk(
   'order/createOrder',
   async (ingredientIds: string[]) => {
@@ -19,6 +26,20 @@ export const createOrder = createAsyncThunk(
     return data.order.number;
   }
 );
+
+// Thunk для получения заказов пользователя
+export const fetchUserOrdersThunk = createAsyncThunk<
+  TOrder[],
+  void,
+  { rejectValue: string }
+>('orders/fetchUserOrders', async (_, { rejectWithValue }) => {
+  try {
+    const orders = await getOrdersApi();
+    return orders;
+  } catch (err: any) {
+    return rejectWithValue(err.message || 'Ошибка при загрузке заказов');
+  }
+});
 
 const orderSlice = createSlice({
   name: 'order',
@@ -31,6 +52,7 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Создание нового заказа
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
       })
@@ -43,6 +65,23 @@ const orderSlice = createSlice({
       )
       .addCase(createOrder.rejected, (state) => {
         state.isLoading = false;
+      })
+
+      // Получение заказов пользователя
+      .addCase(fetchUserOrdersThunk.pending, (state) => {
+        state.userOrdersLoading = true;
+        state.userOrdersError = null;
+      })
+      .addCase(
+        fetchUserOrdersThunk.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.userOrdersLoading = false;
+          state.userOrders = action.payload;
+        }
+      )
+      .addCase(fetchUserOrdersThunk.rejected, (state, action) => {
+        state.userOrdersLoading = false;
+        state.userOrdersError = action.payload as string;
       });
   }
 });
