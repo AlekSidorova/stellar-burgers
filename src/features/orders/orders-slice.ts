@@ -27,7 +27,11 @@ export const createOrder = createAsyncThunk<
 >('order/createOrder', async (ingredientIds, { rejectWithValue }) => {
   try {
     const data = await orderBurgerApi(ingredientIds);
-    return data.order; // возвращаем весь объект заказа
+    // Гарантируем, что ingredients всегда массив
+    return {
+      ...data.order,
+      ingredients: data.order.ingredients ?? []
+    };
   } catch (err: any) {
     return rejectWithValue(err.message || 'Ошибка при создании заказа');
   }
@@ -48,7 +52,13 @@ export const fetchUserOrdersThunk = createAsyncThunk<
       }
     });
     const data = await res.json();
-    if (data.success) return data.orders;
+    if (data.success) {
+      // Убедимся, что ingredients всегда массив
+      return data.orders.map((order: TOrder) => ({
+        ...order,
+        ingredients: order.ingredients ?? []
+      }));
+    }
     return rejectWithValue('Не удалось получить заказы');
   } catch (err: any) {
     return rejectWithValue(err.message || 'Ошибка при загрузке заказов');
@@ -66,7 +76,6 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Создание нового заказа
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
       })
@@ -75,15 +84,12 @@ const orderSlice = createSlice({
         (state, action: PayloadAction<TOrder>) => {
           state.isLoading = false;
           state.orderNumber = action.payload.number;
-          // Добавляем новый заказ в начало истории
           state.userOrders = [action.payload, ...state.userOrders];
         }
       )
       .addCase(createOrder.rejected, (state) => {
         state.isLoading = false;
       })
-
-      // Получение заказов пользователя
       .addCase(fetchUserOrdersThunk.pending, (state) => {
         state.userOrdersLoading = true;
         state.userOrdersError = null;

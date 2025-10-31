@@ -16,9 +16,8 @@ export const OrderCard: FC<OrderCardProps> = ({ order }) => {
   const location = useLocation();
 
   const orderInfo = useMemo(() => {
-    if (!ingredients.length) return null;
-
-    const ingredientsInfo = order.ingredients
+    // Если ингредиенты ещё не загружены, используем пустой массив
+    const ingredientsInfo = (order.ingredients ?? [])
       .map((id) => ingredients.find((ing) => ing._id === id))
       .filter((ing): ing is TIngredient => !!ing);
 
