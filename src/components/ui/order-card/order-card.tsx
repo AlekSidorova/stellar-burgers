@@ -7,7 +7,6 @@ import {
 import styles from './order-card.module.css';
 
 import { OrderCardUIProps } from './type';
-import { OrderStatus } from '@components';
 
 export const OrderCardUI: FC<OrderCardUIProps> = memo(
   ({ orderInfo, maxIngredients, locationState }) => (
@@ -17,6 +16,7 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
       state={locationState}
       className={`p-6 mb-4 mr-2 ${styles.order}`}
     >
+      {/* Номер и дата заказа */}
       <div className={styles.order_info}>
         <span className={`text text_type_digits-default ${styles.number}`}>
           #{String(orderInfo.number).padStart(6, '0')}
@@ -25,10 +25,13 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
           <FormattedDate date={orderInfo.date} />
         </span>
       </div>
+
+      {/* Название заказа */}
       <h4 className={`pt-6 text text_type_main-medium ${styles.order_name}`}>
         {orderInfo.name}
       </h4>
-      <OrderStatus status={orderInfo.status} />
+
+      {/* Контейнер с ингредиентами и суммой */}
       <div className={`pt-6 ${styles.order_content}`}>
         <ul className={styles.ingredients}>
           {orderInfo.ingredientsToShow.map((ingredient, index) => {
@@ -38,18 +41,18 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
               <li
                 className={styles.img_wrap}
                 style={{ zIndex, right }}
-                key={index}
+                key={ingredient._id}
               >
                 <img
+                  className={styles.img}
+                  src={ingredient.image_mobile}
+                  alt={ingredient.name}
                   style={{
                     opacity:
                       orderInfo.remains && maxIngredients === index + 1
                         ? 0.5
                         : 1
                   }}
-                  className={styles.img}
-                  src={ingredient.image_mobile}
-                  alt={ingredient.name}
                 />
                 {maxIngredients === index + 1 && orderInfo.remains > 0 && (
                   <span
@@ -62,7 +65,9 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
             );
           })}
         </ul>
-        <div>
+
+        {/* Сумма заказа */}
+        <div className={styles.total}>
           <span
             className={`text text_type_digits-default pr-1 ${styles.order_total}`}
           >

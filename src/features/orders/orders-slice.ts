@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { orderBurgerApi, getOrdersApi } from '../../utils/burger-api';
+import { orderBurgerApi } from '../../utils/burger-api';
+import { getCookie } from '../../utils/cookie';
 import { TOrder } from '../../utils/types';
 
 interface OrderState {
   orderNumber: number | null;
   isLoading: boolean;
-  userOrders: TOrder[]; // массив заказов пользователя
-  userOrdersLoading: boolean; // статус загрузки заказов
-  userOrdersError: string | null; // ошибка загрузки заказов
+  userOrders: TOrder[];
+  userOrdersLoading: boolean;
+  userOrdersError: string | null;
 }
 
 const initialState: OrderState = {
@@ -18,24 +19,37 @@ const initialState: OrderState = {
   userOrdersError: null
 };
 
-// Thunk для создания нового заказа
-export const createOrder = createAsyncThunk(
-  'order/createOrder',
-  async (ingredientIds: string[]) => {
+// Создание нового заказа
+export const createOrder = createAsyncThunk<
+  TOrder,
+  string[],
+  { rejectValue: string }
+>('order/createOrder', async (ingredientIds, { rejectWithValue }) => {
+  try {
     const data = await orderBurgerApi(ingredientIds);
-    return data.order.number;
+    return data.order; // возвращаем весь объект заказа
+  } catch (err: any) {
+    return rejectWithValue(err.message || 'Ошибка при создании заказа');
   }
-);
+});
 
-// Thunk для получения заказов пользователя
+// Получение заказов пользователя
 export const fetchUserOrdersThunk = createAsyncThunk<
   TOrder[],
   void,
   { rejectValue: string }
 >('orders/fetchUserOrders', async (_, { rejectWithValue }) => {
   try {
-    const orders = await getOrdersApi();
-    return orders;
+    const res = await fetch('https://norma.education-services.ru/api/orders', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        authorization: `Bearer ${getCookie('accessToken')}`
+      }
+    });
+    const data = await res.json();
+    if (data.success) return data.orders;
+    return rejectWithValue('Не удалось получить заказы');
   } catch (err: any) {
     return rejectWithValue(err.message || 'Ошибка при загрузке заказов');
   }
@@ -45,7 +59,7 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    clearOrder: (state) => {
+    clearOrder(state) {
       state.orderNumber = null;
       state.isLoading = false;
     }
@@ -58,9 +72,11 @@ const orderSlice = createSlice({
       })
       .addCase(
         createOrder.fulfilled,
-        (state, action: PayloadAction<number>) => {
-          state.orderNumber = action.payload;
+        (state, action: PayloadAction<TOrder>) => {
           state.isLoading = false;
+          state.orderNumber = action.payload.number;
+          // Добавляем новый заказ в начало истории
+          state.userOrders = [action.payload, ...state.userOrders];
         }
       )
       .addCase(createOrder.rejected, (state) => {
@@ -81,7 +97,7 @@ const orderSlice = createSlice({
       )
       .addCase(fetchUserOrdersThunk.rejected, (state, action) => {
         state.userOrdersLoading = false;
-        state.userOrdersError = action.payload as string;
+        state.userOrdersError = action.payload ?? 'Ошибка загрузки заказов';
       });
   }
 });
