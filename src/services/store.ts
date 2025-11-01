@@ -10,6 +10,7 @@ import ordersReducer from '../features/orders/orders-slice';
 import ingredientsReducer from '../features/ingredients/ingredients-slice';
 import constructorReducer from '../features/constructor/constructor-slice';
 import feedReducer from '../features/feed/feed-slice';
+import { wsMiddleware } from '../middleware/wsMiddleware';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -21,6 +22,8 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(wsMiddleware),
   devTools: process.env.NODE_ENV !== 'production'
 });
 

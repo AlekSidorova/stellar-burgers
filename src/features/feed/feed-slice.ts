@@ -7,17 +7,26 @@ interface FeedState {
   totalToday: number;
   isLoading: boolean;
   error: string | null;
+  wsConnected: boolean;
 }
+
+// Типы для WebSocket
+export type TWSMessage = {
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};
 
 const initialState: FeedState = {
   orders: [],
   total: 0,
   totalToday: 0,
   isLoading: false,
-  error: null
+  error: null,
+  wsConnected: false
 };
 
-// Получение всех заказов (лента)
+// --- AsyncThunk для обычного fetch (при ручном обновлении) ---
 export const fetchFeedOrdersThunk = createAsyncThunk<
   TOrdersData,
   void,
@@ -26,10 +35,7 @@ export const fetchFeedOrdersThunk = createAsyncThunk<
   try {
     const res = await fetch(
       'https://norma.education-services.ru/api/orders/all',
-      {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json;charset=utf-8' }
-      }
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } }
     );
     const data = await res.json();
     if (data.success) return data;
@@ -39,12 +45,40 @@ export const fetchFeedOrdersThunk = createAsyncThunk<
   }
 });
 
+// --- Слайс ---
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  reducers: {},
+  reducers: {
+    // WebSocket успешно подключен
+    wsConnectionSuccess(state) {
+      state.wsConnected = true;
+      state.error = null;
+    },
+    // WebSocket закрыт
+    wsConnectionClosed(state) {
+      state.wsConnected = false;
+    },
+    // Получено новое сообщение через WS
+    wsGetMessage(state, action: PayloadAction<TWSMessage>) {
+      state.orders = action.payload.orders.map((order) => ({
+        ...order,
+        ingredients: order.ingredients ?? []
+      }));
+      state.total = action.payload.total;
+      state.totalToday = action.payload.totalToday;
+      state.isLoading = false;
+      state.error = null;
+    },
+    // Ошибка WS
+    wsConnectionError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+      state.wsConnected = false;
+    }
+  },
   extraReducers: (builder) => {
     builder
+      // --- fetchFeedOrdersThunk ---
       .addCase(fetchFeedOrdersThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -67,5 +101,12 @@ const feedSlice = createSlice({
       });
   }
 });
+
+export const {
+  wsConnectionSuccess,
+  wsConnectionClosed,
+  wsGetMessage,
+  wsConnectionError
+} = feedSlice.actions;
 
 export default feedSlice.reducer;

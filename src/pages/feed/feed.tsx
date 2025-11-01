@@ -9,7 +9,10 @@ export const Feed: FC = () => {
   const { orders, isLoading } = useSelector((state: RootState) => state.feed);
 
   useEffect(() => {
-    dispatch(fetchFeedOrdersThunk());
+    dispatch({ type: 'feed/wsConnect' });
+    return () => {
+      dispatch({ type: 'feed/wsDisconnect' });
+    };
   }, [dispatch]);
 
   const handleGetFeeds = () => {
