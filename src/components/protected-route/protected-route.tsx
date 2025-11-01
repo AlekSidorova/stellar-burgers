@@ -5,7 +5,7 @@ import { RootState } from '../../services/store';
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;
-  redirectIfAuth?: boolean; // для страниц авторизации (login, register)
+  redirectIfAuth?: boolean;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -16,21 +16,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     (state: RootState) => state.user
   );
 
-  // Пока данные пользователя загружаются или не инициализированы — показываем loader
   if (!isInit || isLoading) {
     return <div>Загрузка...</div>;
   }
 
-  // Страница авторизации, но пользователь уже авторизован — редирект на /
   if (redirectIfAuth && user) {
     return <Navigate to='/' replace />;
   }
 
-  // Защищённая страница, но пользователь не авторизован — редирект на /login
   if (!redirectIfAuth && !user) {
     return <Navigate to='/login' replace />;
   }
 
-  // Если всё ок — рендерим children или Outlet для вложенных маршрутов
   return <>{children ?? <Outlet />}</>;
 };

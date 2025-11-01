@@ -22,7 +22,7 @@ export const IngredientDetails: FC = () => {
   const ingredientData = ingredients.find((item) => item._id === id);
 
   if (!ingredientData) {
-    return <p>Ингредиент не найден 😢</p>;
+    return <p>Ингредиент не найден</p>;
   }
 
   return <IngredientDetailsUI ingredientData={ingredientData} />;

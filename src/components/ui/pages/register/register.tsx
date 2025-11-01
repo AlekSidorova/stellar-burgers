@@ -34,7 +34,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             onChange={(e) => setUserName(e.target.value)}
             value={userName}
             name='name'
-            error={false} // ошибки клиента больше нет
+            error={false}
             errorText=''
             size='default'
           />
@@ -63,7 +63,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             type='primary'
             size='medium'
             htmlType='submit'
-            disabled={password.length < 6 || isLoading} // блокировка кнопки
+            disabled={password.length < 6 || isLoading}
           >
             Зарегистрироваться
           </Button>

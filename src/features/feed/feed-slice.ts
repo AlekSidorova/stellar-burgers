@@ -10,7 +10,6 @@ interface FeedState {
   wsConnected: boolean;
 }
 
-// Типы для WebSocket
 export type TWSMessage = {
   orders: TOrder[];
   total: number;
@@ -26,7 +25,6 @@ const initialState: FeedState = {
   wsConnected: false
 };
 
-// --- AsyncThunk для обычного fetch (при ручном обновлении) ---
 export const fetchFeedOrdersThunk = createAsyncThunk<
   TOrdersData,
   void,
@@ -45,21 +43,17 @@ export const fetchFeedOrdersThunk = createAsyncThunk<
   }
 });
 
-// --- Слайс ---
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {
-    // WebSocket успешно подключен
     wsConnectionSuccess(state) {
       state.wsConnected = true;
       state.error = null;
     },
-    // WebSocket закрыт
     wsConnectionClosed(state) {
       state.wsConnected = false;
     },
-    // Получено новое сообщение через WS
     wsGetMessage(state, action: PayloadAction<TWSMessage>) {
       state.orders = action.payload.orders.map((order) => ({
         ...order,
@@ -70,7 +64,6 @@ const feedSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
-    // Ошибка WS
     wsConnectionError(state, action: PayloadAction<string>) {
       state.error = action.payload;
       state.wsConnected = false;
@@ -78,7 +71,6 @@ const feedSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // --- fetchFeedOrdersThunk ---
       .addCase(fetchFeedOrdersThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;

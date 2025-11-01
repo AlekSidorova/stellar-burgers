@@ -14,7 +14,6 @@ const initialState: IngredientsState = {
   error: null
 };
 
-// Thunk для загрузки ингредиентов
 export const fetchIngredientsThunk = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {

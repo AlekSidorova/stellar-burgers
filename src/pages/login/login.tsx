@@ -20,7 +20,6 @@ export const Login: FC = () => {
 
     try {
       await dispatch(loginUserThunk({ email, password })).unwrap();
-      // после успешного логина редиректим на /profile
       navigate('/profile', { replace: true });
     } catch (err: any) {
       setErrorText(err || 'Ошибка при авторизации');

@@ -16,7 +16,6 @@ interface UserState {
   error: string | null;
 }
 
-// Инициализация состояния
 const initialState: UserState = {
   user: null,
   isLoading: false,
@@ -24,7 +23,6 @@ const initialState: UserState = {
   error: null
 };
 
-// Thunk для логина
 export const loginUserThunk = createAsyncThunk(
   'user/login',
   async (data: TLoginData, { rejectWithValue }) => {
@@ -39,7 +37,6 @@ export const loginUserThunk = createAsyncThunk(
   }
 );
 
-// Thunk для регистрации
 export const registerUserThunk = createAsyncThunk(
   'user/register',
   async (data: TRegisterData, { rejectWithValue }) => {
@@ -54,7 +51,6 @@ export const registerUserThunk = createAsyncThunk(
   }
 );
 
-// Thunk для получения данных пользователя
 export const getUserThunk = createAsyncThunk(
   'user/getUser',
   async (_, { rejectWithValue }) => {
@@ -67,7 +63,6 @@ export const getUserThunk = createAsyncThunk(
   }
 );
 
-// Thunk для обновления данных пользователя
 export const updateUserThunk = createAsyncThunk(
   'user/updateUser',
   async (data: Partial<TRegisterData>, { rejectWithValue }) => {
@@ -80,7 +75,6 @@ export const updateUserThunk = createAsyncThunk(
   }
 );
 
-// Thunk для выхода
 export const logoutThunk = createAsyncThunk('user/logout', async () => {
   await logoutApi();
   localStorage.removeItem('refreshToken');

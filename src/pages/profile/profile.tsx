@@ -15,7 +15,6 @@ export const Profile: FC = () => {
   });
   const [updateUserError, setUpdateUserError] = useState<string | null>(null);
 
-  // Подставляем данные пользователя в форму
   useEffect(() => {
     if (user) {
       setFormValue({
@@ -62,7 +61,6 @@ export const Profile: FC = () => {
     }));
   };
 
-  // Защита на случай, если user вдруг null
   if (!user) return null;
 
   return (

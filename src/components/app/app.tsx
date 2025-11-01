@@ -28,7 +28,6 @@ const AppContent = () => {
   const background = location.state?.background;
   const dispatch = useDispatch();
 
-  // Добавляем автологин при старте приложения
   useEffect(() => {
     dispatch(getUserThunk());
   }, [dispatch]);

@@ -19,7 +19,6 @@ const initialState: OrderState = {
   userOrdersError: null
 };
 
-// Создание нового заказа
 export const createOrder = createAsyncThunk<
   TOrder,
   string[],
@@ -27,7 +26,6 @@ export const createOrder = createAsyncThunk<
 >('order/createOrder', async (ingredientIds, { rejectWithValue }) => {
   try {
     const data = await orderBurgerApi(ingredientIds);
-    // Гарантируем, что ingredients всегда массив
     return {
       ...data.order,
       ingredients: data.order.ingredients ?? []
@@ -37,7 +35,6 @@ export const createOrder = createAsyncThunk<
   }
 });
 
-// Получение заказов пользователя
 export const fetchUserOrdersThunk = createAsyncThunk<
   TOrder[],
   void,
@@ -53,7 +50,6 @@ export const fetchUserOrdersThunk = createAsyncThunk<
     });
     const data = await res.json();
     if (data.success) {
-      // Убедимся, что ingredients всегда массив
       return data.orders.map((order: TOrder) => ({
         ...order,
         ingredients: order.ingredients ?? []

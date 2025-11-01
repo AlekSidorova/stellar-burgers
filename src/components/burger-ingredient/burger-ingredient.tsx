@@ -19,13 +19,13 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     return (
       <Link
         to={`/ingredients/${ingredient._id}`}
-        state={{ background: location }} // чтобы модалка знала "откуда пришли"
+        state={{ background: location }}
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
         <BurgerIngredientUI
           ingredient={ingredient}
           count={count}
-          handleAdd={handleAddClick} // теперь тип согласован
+          handleAdd={handleAddClick}
         />
       </Link>
     );
