@@ -1,6 +1,7 @@
 import { FC, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { RootState } from '../../services/store';
+import { useNavigate } from 'react-router-dom'; // 👈 добавляем навигацию
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { createOrder, clearOrder } from '../../features/orders/orders-slice';
@@ -8,6 +9,7 @@ import { clearConstructor } from '../../features/constructor/constructor-slice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // 👈 хук навигации
 
   const { bun, ingredients } = useSelector(
     (state: RootState) => state.burgerConstructor
@@ -15,6 +17,7 @@ export const BurgerConstructor: FC = () => {
   const { orderNumber, isLoading } = useSelector(
     (state: RootState) => state.orders
   );
+  const user = useSelector((state: RootState) => state.user.user); // 👈 достаём пользователя
 
   // Считаем общую цену
   const price = useMemo(() => {
@@ -29,7 +32,14 @@ export const BurgerConstructor: FC = () => {
 
   // Кнопка оформления заказа
   const onOrderClick = () => {
+    // 👇 проверка авторизации
+    if (!user) {
+      navigate('/login'); // перенаправляем на страницу логина
+      return;
+    }
+
     if (!bun || isLoading) return;
+
     const ids = [
       bun._id,
       ...ingredients.map((i: TConstructorIngredient) => i._id)
