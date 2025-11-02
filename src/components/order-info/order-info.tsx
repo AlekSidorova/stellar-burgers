@@ -1,6 +1,6 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from '../../services/store';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 import { getOrderByNumberApi } from '../../utils/burger-api';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
@@ -8,8 +8,8 @@ import { TIngredient, TOrder } from '@utils-types';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
-  const dispatch = useDispatch();
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const dispatch = useAppDispatch();
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
 
   const [orderData, setOrderData] = React.useState<TOrder | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);

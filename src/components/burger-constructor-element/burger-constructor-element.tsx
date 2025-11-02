@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-import { useDispatch } from '../../services/store';
+import { useAppDispatch } from '../../services/store';
 import {
   removeIngredient,
   moveIngredient
@@ -9,7 +9,7 @@ import { BurgerConstructorElementProps } from './type';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
   ({ ingredient, index, totalItems }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleMoveDown = () => {
       if (index < totalItems - 1) {

@@ -1,12 +1,18 @@
 import { FC, useEffect } from 'react';
-import { useSelector, useDispatch, RootState } from '../../services/store';
+import {
+  useAppSelector,
+  useAppDispatch,
+  RootState
+} from '../../services/store';
 import { fetchFeedOrdersThunk } from '../../features/feed/feed-slice';
 import { FeedUI } from '@ui-pages';
 import { Preloader } from '@ui';
 
 export const Feed: FC = () => {
-  const dispatch = useDispatch();
-  const { orders, isLoading } = useSelector((state: RootState) => state.feed);
+  const dispatch = useAppDispatch();
+  const { orders, isLoading } = useAppSelector(
+    (state: RootState) => state.feed
+  );
 
   useEffect(() => {
     dispatch({ type: 'feed/wsConnect' });

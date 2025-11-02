@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from '../../services/store';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 
 import { ConstructorPageUI } from '../.././components/ui/pages/constructor-page';
 import { fetchIngredientsThunk } from '../../features/ingredients/ingredients-slice';
 import { RootState } from '../../services/store';
 
 export const ConstructorPage = () => {
-  const dispatch = useDispatch();
-  const { ingredients, isLoading } = useSelector(
+  const dispatch = useAppDispatch();
+  const { ingredients, isLoading } = useAppSelector(
     (state: RootState) => state.ingredients
   );
 

@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { useSelector } from '../../services/store';
+import { useAppSelector } from '../../services/store';
 import { RootState } from '../../services/store';
 import { TIngredient, TOrder } from '@utils-types';
 import { OrderCardUI } from '../ui/order-card';
@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 const maxIngredients = 6;
 
 export const OrderCard: FC<OrderCardProps> = ({ order }) => {
-  const ingredients: TIngredient[] = useSelector(
+  const ingredients: TIngredient[] = useAppSelector(
     (state: RootState) => state.ingredients.ingredients
   );
 

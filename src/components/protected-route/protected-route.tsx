@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../services/store';
 import { Navigate, Outlet } from 'react-router-dom';
 import { RootState } from '../../services/store';
 
@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   redirectIfAuth = false
 }) => {
-  const { user, isInit, isLoading } = useSelector(
+  const { user, isInit, isLoading } = useAppSelector(
     (state: RootState) => state.user
   );
 

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from '../../services/store';
+import { useAppSelector } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 import { RootState } from '../../services/store';
@@ -9,7 +9,7 @@ export const IngredientDetails: FC = () => {
   const { id } = useParams();
 
   // Достаём список ингредиентов из стора
-  const { ingredients, isLoading } = useSelector(
+  const { ingredients, isLoading } = useAppSelector(
     (state: RootState) => state.ingredients
   );
 

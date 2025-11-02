@@ -1,6 +1,6 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import { registerUserThunk } from '../../features/user/user-slice';
 import { RegisterUI } from '@ui-pages';
 import { RootState } from '../../services/store';
@@ -11,9 +11,9 @@ export const Register: FC = () => {
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState('');
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isLoading } = useSelector((state: RootState) => state.user);
+  const { isLoading } = useAppSelector((state: RootState) => state.user);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();

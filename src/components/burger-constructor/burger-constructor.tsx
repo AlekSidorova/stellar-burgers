@@ -1,5 +1,5 @@
 import { FC, useMemo, useEffect } from 'react';
-import { useSelector, useDispatch } from '../../services/store';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 import { RootState } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 import { TConstructorIngredient } from '@utils-types';
@@ -8,16 +8,16 @@ import { createOrder, clearOrder } from '../../features/orders/orders-slice';
 import { clearConstructor } from '../../features/constructor/constructor-slice';
 
 export const BurgerConstructor: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { bun, ingredients } = useSelector(
+  const { bun, ingredients } = useAppSelector(
     (state: RootState) => state.burgerConstructor
   );
-  const { orderNumber, isLoading } = useSelector(
+  const { orderNumber, isLoading } = useAppSelector(
     (state: RootState) => state.orders
   );
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useAppSelector((state: RootState) => state.user.user);
 
   // Считаем общую цену
   const price = useMemo(() => {
