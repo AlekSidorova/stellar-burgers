@@ -30,8 +30,11 @@ export const createOrder = createAsyncThunk<
       ...data.order,
       ingredients: data.order.ingredients ?? []
     };
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Ошибка при создании заказа');
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return rejectWithValue(err.message);
+    }
+    return rejectWithValue('Ошибка при создании заказа');
   }
 });
 
@@ -56,8 +59,11 @@ export const fetchUserOrdersThunk = createAsyncThunk<
       }));
     }
     return rejectWithValue('Не удалось получить заказы');
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Ошибка при загрузке заказов');
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return rejectWithValue(err.message);
+    }
+    return rejectWithValue('Ошибка при загрузке заказов');
   }
 });
 

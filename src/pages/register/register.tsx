@@ -24,8 +24,14 @@ export const Register: FC = () => {
         registerUserThunk({ name: userName, email, password })
       ).unwrap();
       navigate('/profile', { replace: true });
-    } catch (err: any) {
-      setErrorText(err || 'Ошибка при регистрации');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorText(err.message);
+      } else if (typeof err === 'string') {
+        setErrorText(err);
+      } else {
+        setErrorText('Неизвестная ошибка');
+      }
     }
   };
 

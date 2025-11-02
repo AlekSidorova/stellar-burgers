@@ -38,8 +38,11 @@ export const fetchFeedOrdersThunk = createAsyncThunk<
     const data = await res.json();
     if (data.success) return data;
     return rejectWithValue('Не удалось получить ленту заказов');
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Ошибка при загрузке ленты');
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return rejectWithValue(err.message);
+    }
+    return rejectWithValue('Ошибка при загрузке ленты');
   }
 });
 

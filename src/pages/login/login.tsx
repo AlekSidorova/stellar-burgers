@@ -21,8 +21,14 @@ export const Login: FC = () => {
     try {
       await dispatch(loginUserThunk({ email, password })).unwrap();
       navigate('/profile', { replace: true });
-    } catch (err: any) {
-      setErrorText(err || 'Ошибка при авторизации');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorText(err.message);
+      } else if (typeof err === 'string') {
+        setErrorText(err);
+      } else {
+        setErrorText('Неизвестная ошибка');
+      }
     }
   };
 

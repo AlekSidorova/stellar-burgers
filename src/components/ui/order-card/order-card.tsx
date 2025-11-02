@@ -41,7 +41,7 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
               <li
                 className={styles.img_wrap}
                 style={{ zIndex, right }}
-                key={ingredient._id}
+                key={`${ingredient._id}-${index}`}
               >
                 <img
                   className={styles.img}

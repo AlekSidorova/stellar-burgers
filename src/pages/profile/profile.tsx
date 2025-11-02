@@ -38,8 +38,14 @@ export const Profile: FC = () => {
     try {
       await dispatch(updateUserThunk(formValue)).unwrap();
       setFormValue((prev) => ({ ...prev, password: '' }));
-    } catch (err: any) {
-      setUpdateUserError(err || 'Ошибка при обновлении данных');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setUpdateUserError(err.message);
+      } else if (typeof err === 'string') {
+        setUpdateUserError(err);
+      } else {
+        setUpdateUserError('Неизвестная ошибка');
+      }
     }
   };
 

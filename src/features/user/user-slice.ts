@@ -23,57 +23,75 @@ const initialState: UserState = {
   error: null
 };
 
-export const loginUserThunk = createAsyncThunk(
-  'user/login',
-  async (data: TLoginData, { rejectWithValue }) => {
-    try {
-      const res = await loginUserApi(data);
-      localStorage.setItem('refreshToken', res.refreshToken);
-      setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
-      return res.user;
-    } catch (err: any) {
-      return rejectWithValue(err.message);
-    }
+export const loginUserThunk = createAsyncThunk<
+  TUser,
+  TLoginData,
+  { rejectValue: string }
+>('user/login', async (data, { rejectWithValue }) => {
+  try {
+    const res = await loginUserApi(data);
+    localStorage.setItem('refreshToken', res.refreshToken);
+    setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
+    return res.user;
+  } catch (err: unknown) {
+    if (err instanceof Error) return rejectWithValue(err.message);
+    return rejectWithValue('Неизвестная ошибка при логине');
   }
-);
+});
 
-export const registerUserThunk = createAsyncThunk(
-  'user/register',
-  async (data: TRegisterData, { rejectWithValue }) => {
-    try {
-      const res = await registerUserApi(data);
-      localStorage.setItem('refreshToken', res.refreshToken);
-      setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
-      return res.user;
-    } catch (err: any) {
+export const registerUserThunk = createAsyncThunk<
+  TUser,
+  TRegisterData,
+  { rejectValue: string }
+>('user/register', async (data, { rejectWithValue }) => {
+  try {
+    const res = await registerUserApi(data);
+    localStorage.setItem('refreshToken', res.refreshToken);
+    setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
+    return res.user;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
       return rejectWithValue(err.message);
     }
+    return rejectWithValue('Неизвестная ошибка при регистрации');
   }
-);
+});
 
-export const getUserThunk = createAsyncThunk(
-  'user/getUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await getUserApi();
-      return res.user;
-    } catch (err: any) {
+export const getUserThunk = createAsyncThunk<
+  TUser,
+  void,
+  { rejectValue: string }
+>('user/getUser', async (_, { rejectWithValue }) => {
+  try {
+    const res = await getUserApi();
+    return res.user;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
       return rejectWithValue(err.message);
     }
+    return rejectWithValue(
+      'Неизвестная ошибка при получении данных пользователя'
+    );
   }
-);
+});
 
-export const updateUserThunk = createAsyncThunk(
-  'user/updateUser',
-  async (data: Partial<TRegisterData>, { rejectWithValue }) => {
-    try {
-      const res = await updateUserApi(data);
-      return res.user;
-    } catch (err: any) {
+export const updateUserThunk = createAsyncThunk<
+  TUser,
+  Partial<TRegisterData>,
+  { rejectValue: string }
+>('user/updateUser', async (data, { rejectWithValue }) => {
+  try {
+    const res = await updateUserApi(data);
+    return res.user;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
       return rejectWithValue(err.message);
     }
+    return rejectWithValue(
+      'Неизвестная ошибка при обновлении данных пользователя'
+    );
   }
-);
+});
 
 export const logoutThunk = createAsyncThunk('user/logout', async () => {
   await logoutApi();
