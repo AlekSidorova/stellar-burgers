@@ -112,7 +112,7 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login
+      //Login
       .addCase(loginUserThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -129,7 +129,7 @@ export const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Register
+      //Register
       .addCase(registerUserThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -146,7 +146,7 @@ export const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Get User
+      //Get User
       .addCase(getUserThunk.pending, (state) => {
         state.isLoading = true;
       })
@@ -163,7 +163,7 @@ export const userSlice = createSlice({
         state.isInit = true;
       })
 
-      // Update User
+      //Update User
       .addCase(updateUserThunk.pending, (state) => {
         state.isLoading = true;
       })
@@ -178,7 +178,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
       })
 
-      // Logout
+      //Logout
       .addCase(logoutThunk.fulfilled, (state) => {
         state.user = null;
       });
