@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../services/store';
-import { addIngredient } from '../../features/constructor/constructor-slice';
+import { addIngredientWithId } from '../../features/constructor/constructor-slice';
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
 
@@ -10,10 +10,8 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const location = useLocation();
     const dispatch = useAppDispatch();
 
-    // функция добавления ингредиента
     const handleAddClick = () => {
-      const ingredientWithId = { ...ingredient, id: crypto.randomUUID() };
-      dispatch(addIngredient(ingredientWithId));
+      dispatch(addIngredientWithId(ingredient));
     };
 
     return (
