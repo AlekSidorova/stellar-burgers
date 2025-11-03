@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '../../utils/burger-api';
+import { orderBurgerApi, getOrdersApi } from '../../utils/burger-api';
 import { getCookie } from '../../utils/cookie';
 import { TOrder } from '../../utils/types';
 
@@ -44,25 +44,13 @@ export const fetchUserOrdersThunk = createAsyncThunk<
   { rejectValue: string }
 >('orders/fetchUserOrders', async (_, { rejectWithValue }) => {
   try {
-    const res = await fetch('https://norma.education-services.ru/api/orders', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        authorization: `Bearer ${getCookie('accessToken')}`
-      }
-    });
-    const data = await res.json();
-    if (data.success) {
-      return data.orders.map((order: TOrder) => ({
-        ...order,
-        ingredients: order.ingredients ?? []
-      }));
-    }
-    return rejectWithValue('Не удалось получить заказы');
+    const orders = await getOrdersApi();
+    return orders.map((order: TOrder) => ({
+      ...order,
+      ingredients: order.ingredients ?? []
+    }));
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
+    if (err instanceof Error) return rejectWithValue(err.message);
     return rejectWithValue('Ошибка при загрузке заказов');
   }
 });
@@ -81,14 +69,11 @@ const orderSlice = createSlice({
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(
-        createOrder.fulfilled,
-        (state, action: PayloadAction<TOrder>) => {
-          state.isLoading = false;
-          state.orderNumber = action.payload.number;
-          state.userOrders = [action.payload, ...state.userOrders];
-        }
-      )
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.orderNumber = action.payload.number;
+        state.userOrders = [action.payload, ...state.userOrders];
+      })
       .addCase(createOrder.rejected, (state) => {
         state.isLoading = false;
       })
