@@ -1,38 +1,46 @@
 import { FC, useEffect } from 'react';
-import {
-  useAppSelector,
-  useAppDispatch,
-  RootState
-} from '../../services/store';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 import { fetchFeedOrdersThunk } from '../../features/feed/feed-slice';
+import { fetchIngredientsThunk } from '../../features/ingredients/ingredients-slice';
 import { FeedUI } from '@ui-pages';
 import { Preloader } from '@ui';
 
 export const Feed: FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, isLoading } = useAppSelector(
-    (state: RootState) => state.feed
+  const { orders, isLoading } = useAppSelector((state) => state.feed);
+  const { ingredients, isLoading: isIngredientsLoading } = useAppSelector(
+    (state) => state.ingredients
   );
+  const { isInit } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    // Подгружаем все заказы сразу
+    if (!isInit) return;
+
+    // Подгружаем ингредиенты, если их нет
+    if (!ingredients.length) {
+      dispatch(fetchIngredientsThunk());
+    }
+
+    // Подгружаем заказы
     dispatch(fetchFeedOrdersThunk());
 
-    // Подключаем WebSocket
+    // Подключение WS
     dispatch({ type: 'feed/wsConnect' });
 
     return () => {
       dispatch({ type: 'feed/wsDisconnect' });
     };
-  }, [dispatch]);
+  }, [dispatch, isInit, ingredients.length]);
 
-  const handleGetFeeds = () => {
-    dispatch(fetchFeedOrdersThunk());
-  };
-
-  if (isLoading) return <Preloader />;
+  // Показываем прелоадер пока подгружаются данные
+  if (isLoading || isIngredientsLoading || !isInit) return <Preloader />;
 
   if (!orders || orders.length === 0) return <p>Нет заказов</p>;
 
-  return <FeedUI orders={orders} handleGetFeeds={handleGetFeeds} />;
+  return (
+    <FeedUI
+      orders={orders}
+      handleGetFeeds={() => dispatch(fetchFeedOrdersThunk())}
+    />
+  );
 };

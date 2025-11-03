@@ -25,6 +25,7 @@ const initialState: FeedState = {
   wsConnected: false
 };
 
+// HTTP-загрузка ленты заказов
 export const fetchFeedOrdersThunk = createAsyncThunk<
   TOrdersData,
   void,
@@ -36,12 +37,12 @@ export const fetchFeedOrdersThunk = createAsyncThunk<
       { method: 'GET', headers: { 'Content-Type': 'application/json' } }
     );
     const data = await res.json();
+
     if (data.success) return data;
+
     return rejectWithValue('Не удалось получить ленту заказов');
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
+    if (err instanceof Error) return rejectWithValue(err.message);
     return rejectWithValue('Ошибка при загрузке ленты');
   }
 });
@@ -80,14 +81,18 @@ const feedSlice = createSlice({
       })
       .addCase(
         fetchFeedOrdersThunk.fulfilled,
-        (state, action: PayloadAction<TOrdersData>) => {
+        (state, action: PayloadAction<any>) => {
           state.isLoading = false;
-          state.orders = action.payload.orders.map((order) => ({
-            ...order,
-            ingredients: order.ingredients ?? []
-          }));
-          state.total = action.payload.total;
-          state.totalToday = action.payload.totalToday;
+          if (action.payload && action.payload.success) {
+            state.orders = action.payload.orders.map((order: TOrder) => ({
+              ...order,
+              ingredients: order.ingredients ?? []
+            }));
+            state.total = action.payload.total;
+            state.totalToday = action.payload.totalToday;
+          } else {
+            state.error = 'Не удалось получить данные';
+          }
         }
       )
       .addCase(fetchFeedOrdersThunk.rejected, (state, action) => {
