@@ -10,24 +10,19 @@ const maxIngredients = 6;
 export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
 
-  // Берем все ингредиенты из стора
   const ingredients = useAppSelector((state) => state.ingredients.ingredients);
 
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 
-    // собираем ингредиенты заказа
     const ingredientsInfo: TIngredient[] = order.ingredients
       .map((id) => ingredients.find((ing) => ing._id === id))
       .filter(Boolean) as TIngredient[];
 
-    // считаем общую сумму
     const total = ingredientsInfo.reduce((sum, item) => sum + item.price, 0);
 
-    // берем первые maxIngredients ингредиентов для показа в карточке
     const ingredientsToShow = ingredientsInfo.slice(0, maxIngredients);
 
-    // сколько ингредиентов скрыто
     const remains =
       ingredientsInfo.length > maxIngredients
         ? ingredientsInfo.length - maxIngredients
@@ -51,7 +46,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
     <OrderCardUI
       orderInfo={orderInfo}
       maxIngredients={maxIngredients}
-      locationState={{ background: location }}
+      locationState={{ background: location }} // модалка
     />
   );
 });

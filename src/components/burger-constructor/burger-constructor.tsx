@@ -53,7 +53,7 @@ export const BurgerConstructor: FC = () => {
             : res.payload;
 
         if (orderNumber) {
-          navigate(`/feed/${orderNumber}`, { state: { background: location } });
+          // не делаем navigate
           dispatch(clearConstructor());
         }
       }

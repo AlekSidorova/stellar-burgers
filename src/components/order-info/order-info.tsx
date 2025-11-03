@@ -14,7 +14,6 @@ export const OrderInfo: FC = () => {
   const [orderData, setOrderData] = useState<TOrder | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Если открыли через modal после создания заказа
   const orderId = number ? Number(number) : orderNumber;
 
   useEffect(() => {
@@ -42,11 +41,8 @@ export const OrderInfo: FC = () => {
         const ingredient = ingredients.find((ing) => ing._id === id);
         if (!ingredient) return acc;
 
-        if (!acc[id]) {
-          acc[id] = { ...ingredient, count: 1 };
-        } else {
-          acc[id].count++;
-        }
+        if (!acc[id]) acc[id] = { ...ingredient, count: 1 };
+        else acc[id].count++;
 
         return acc;
       },
