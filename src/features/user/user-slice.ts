@@ -23,6 +23,8 @@ const initialState: UserState = {
   error: null
 };
 
+// ----------------------- Thunks -----------------------
+
 export const loginUserThunk = createAsyncThunk<
   TUser,
   TLoginData,
@@ -31,7 +33,7 @@ export const loginUserThunk = createAsyncThunk<
   try {
     const res = await loginUserApi(data);
     localStorage.setItem('refreshToken', res.refreshToken);
-    setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
+    setCookie('accessToken', res.accessToken); // токен уже с "Bearer"
     return res.user;
   } catch (err: unknown) {
     if (err instanceof Error) return rejectWithValue(err.message);
@@ -47,12 +49,10 @@ export const registerUserThunk = createAsyncThunk<
   try {
     const res = await registerUserApi(data);
     localStorage.setItem('refreshToken', res.refreshToken);
-    setCookie('accessToken', res.accessToken.split('Bearer ')[1]);
+    setCookie('accessToken', res.accessToken); // токен уже с "Bearer"
     return res.user;
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
+    if (err instanceof Error) return rejectWithValue(err.message);
     return rejectWithValue('Неизвестная ошибка при регистрации');
   }
 });
@@ -66,9 +66,7 @@ export const getUserThunk = createAsyncThunk<
     const res = await getUserApi();
     return res.user;
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
+    if (err instanceof Error) return rejectWithValue(err.message);
     return rejectWithValue(
       'Неизвестная ошибка при получении данных пользователя'
     );
@@ -84,9 +82,7 @@ export const updateUserThunk = createAsyncThunk<
     const res = await updateUserApi(data);
     return res.user;
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
+    if (err instanceof Error) return rejectWithValue(err.message);
     return rejectWithValue(
       'Неизвестная ошибка при обновлении данных пользователя'
     );
@@ -96,8 +92,10 @@ export const updateUserThunk = createAsyncThunk<
 export const logoutThunk = createAsyncThunk('user/logout', async () => {
   await logoutApi();
   localStorage.removeItem('refreshToken');
-  setCookie('accessToken', '');
+  setCookie('accessToken', '', { expires: -1 }); // удалить cookie
 });
+
+// ----------------------- Slice -----------------------
 
 export const userSlice = createSlice({
   name: 'user',
@@ -112,7 +110,7 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      //Login
+      // Login
       .addCase(loginUserThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -129,7 +127,7 @@ export const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      //Register
+      // Register
       .addCase(registerUserThunk.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -146,7 +144,7 @@ export const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      //Get User
+      // Get User
       .addCase(getUserThunk.pending, (state) => {
         state.isLoading = true;
       })
@@ -163,7 +161,7 @@ export const userSlice = createSlice({
         state.isInit = true;
       })
 
-      //Update User
+      // Update User
       .addCase(updateUserThunk.pending, (state) => {
         state.isLoading = true;
       })
@@ -178,12 +176,14 @@ export const userSlice = createSlice({
         state.isLoading = false;
       })
 
-      //Logout
+      // Logout
       .addCase(logoutThunk.fulfilled, (state) => {
         state.user = null;
       });
   }
 });
 
-export const { init } = userSlice.actions;
+// ----------------------- Exports -----------------------
+
+export const { init, logout } = userSlice.actions;
 export default userSlice.reducer;
