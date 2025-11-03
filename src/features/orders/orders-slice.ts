@@ -20,15 +20,23 @@ const initialState: OrderState = {
 };
 
 export const createOrder = createAsyncThunk<
-  TOrder,
+  { number: number; order: TOrder },
   string[],
   { rejectValue: string }
 >('order/createOrder', async (ingredientIds, { rejectWithValue }) => {
   try {
     const data = await orderBurgerApi(ingredientIds);
+
+    // Проверяем, где лежит номер заказа
+    const number = data?.order?.number ?? data?.number ?? null;
+    if (!number) throw new Error('Номер заказа не найден в ответе API');
+
     return {
-      ...data.order,
-      ingredients: data.order.ingredients ?? []
+      number,
+      order: {
+        ...data.order,
+        ingredients: data.order.ingredients ?? []
+      }
     };
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -71,8 +79,8 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.orderNumber = action.payload.number;
-        state.userOrders = [action.payload, ...state.userOrders];
+        state.orderNumber = action.payload.number; // <-- теперь точно есть
+        state.userOrders = [action.payload.order, ...state.userOrders];
       })
       .addCase(createOrder.rejected, (state) => {
         state.isLoading = false;

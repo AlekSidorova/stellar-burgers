@@ -4,7 +4,7 @@ import {
   useAppDispatch,
   RootState
 } from '../../services/store';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createOrder, clearOrder } from '../../features/orders/orders-slice';
 import { fetchIngredientsThunk } from '../../features/ingredients/ingredients-slice';
 import { ConstructorPageUI } from '../../components/ui/pages/constructor-page/constructor-page';
@@ -14,7 +14,6 @@ import { OrderInfo } from '@components';
 export const ConstructorPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { ingredients, isLoading } = useAppSelector(
     (state: RootState) => state.ingredients
@@ -35,11 +34,10 @@ export const ConstructorPage = () => {
   const handleCreateOrder = () => {
     if (selectedIngredients.length === 0) return alert('Добавьте ингредиенты!');
 
-    dispatch(createOrder(selectedIngredients)).then((res) => {
-      if (res.meta.requestStatus === 'fulfilled') {
-        setIsModalOpen(true);
-      }
-    });
+    // Открываем модалку сразу, номер подтянется позже
+    setIsModalOpen(true);
+
+    dispatch(createOrder(selectedIngredients));
   };
 
   const handleCloseModal = () => {
@@ -55,7 +53,6 @@ export const ConstructorPage = () => {
         ingredients={ingredients}
       />
 
-      {/* Кнопка оформления заказа */}
       <div className='pl-5 pr-5 mt-5'>
         <button
           className='button text text_type_main-default'
@@ -66,9 +63,11 @@ export const ConstructorPage = () => {
         </button>
       </div>
 
-      {/* Модалка с информацией о заказе */}
-      {isModalOpen && orderNumber && (
-        <Modal title={`Ваш заказ №${orderNumber}`} onClose={handleCloseModal}>
+      {isModalOpen && (
+        <Modal
+          title={orderNumber ? `Ваш заказ №${orderNumber}` : 'Ваш заказ'}
+          onClose={handleCloseModal}
+        >
           <OrderInfo />
         </Modal>
       )}

@@ -32,5 +32,7 @@ export const Feed: FC = () => {
 
   if (isLoading) return <Preloader />;
 
+  if (!orders || orders.length === 0) return <p>Нет заказов</p>;
+
   return <FeedUI orders={orders} handleGetFeeds={handleGetFeeds} />;
 };
