@@ -53,16 +53,6 @@ export const ConstructorPage = () => {
         ingredients={ingredients}
       />
 
-      <div className='pl-5 pr-5 mt-5'>
-        <button
-          className='button text text_type_main-default'
-          disabled={isOrderLoading}
-          onClick={handleCreateOrder}
-        >
-          {isOrderLoading ? 'Оформление...' : 'Оформить заказ'}
-        </button>
-      </div>
-
       {isModalOpen && (
         <Modal
           title={orderNumber ? `Ваш заказ №${orderNumber}` : 'Ваш заказ'}
