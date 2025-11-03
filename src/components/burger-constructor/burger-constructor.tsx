@@ -1,7 +1,10 @@
-import { FC, useMemo, useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../services/store';
-import { RootState } from '../../services/store';
-import { useNavigate } from 'react-router-dom';
+import { FC, useMemo } from 'react';
+import {
+  useAppSelector,
+  useAppDispatch,
+  RootState
+} from '../../services/store';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { createOrder, clearOrder } from '../../features/orders/orders-slice';
@@ -10,6 +13,7 @@ import { clearConstructor } from '../../features/constructor/constructor-slice';
 export const BurgerConstructor: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { bun, ingredients } = useAppSelector(
     (state: RootState) => state.burgerConstructor
@@ -19,18 +23,15 @@ export const BurgerConstructor: FC = () => {
   );
   const user = useAppSelector((state: RootState) => state.user.user);
 
-  // Считаем общую цену
   const price = useMemo(() => {
     const ingredientsPrice =
       ingredients?.reduce(
         (sum: number, item: TConstructorIngredient) => sum + item.price,
         0
       ) || 0;
-
     return (bun?.price || 0) * 2 + ingredientsPrice;
   }, [bun, ingredients]);
 
-  // Кнопка оформления заказа
   const onOrderClick = () => {
     if (!user) {
       navigate('/login');
@@ -43,18 +44,23 @@ export const BurgerConstructor: FC = () => {
       bun._id,
       ...ingredients.map((i: TConstructorIngredient) => i._id)
     ];
-    dispatch(createOrder(ids));
+
+    dispatch(createOrder(ids)).then((res) => {
+      if (res.meta.requestStatus === 'fulfilled' && res.payload) {
+        const orderNumber =
+          typeof res.payload === 'object' && res.payload !== null
+            ? res.payload.number
+            : res.payload;
+
+        if (orderNumber) {
+          navigate(`/feed/${orderNumber}`, { state: { background: location } });
+          dispatch(clearConstructor());
+        }
+      }
+    });
   };
 
-  // Закрытие модалки
   const closeOrderModal = () => dispatch(clearOrder());
-
-  // Очистка конструктора после успешного заказа
-  useEffect(() => {
-    if (orderNumber) {
-      dispatch(clearConstructor());
-    }
-  }, [orderNumber, dispatch]);
 
   return (
     <BurgerConstructorUI

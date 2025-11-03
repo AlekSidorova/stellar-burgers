@@ -15,7 +15,12 @@ export const Feed: FC = () => {
   );
 
   useEffect(() => {
+    // Подгружаем все заказы сразу
+    dispatch(fetchFeedOrdersThunk());
+
+    // Подключаем WebSocket
     dispatch({ type: 'feed/wsConnect' });
+
     return () => {
       dispatch({ type: 'feed/wsDisconnect' });
     };

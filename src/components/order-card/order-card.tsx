@@ -1,33 +1,47 @@
-import { FC, useMemo } from 'react';
-import { useAppSelector } from '../../services/store';
-import { RootState } from '../../services/store';
-import { TIngredient, TOrder } from '@utils-types';
-import { OrderCardUI } from '../ui/order-card';
-import { OrderCardProps } from './type';
+import { FC, memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAppSelector } from '../../services/store';
+import { OrderCardProps } from './type';
+import { TIngredient } from '@utils-types';
+import { OrderCardUI } from '../ui/order-card';
 
 const maxIngredients = 6;
 
-export const OrderCard: FC<OrderCardProps> = ({ order }) => {
-  const ingredients: TIngredient[] = useAppSelector(
-    (state: RootState) => state.ingredients.ingredients
-  );
-
+export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
 
+  // Берем все ингредиенты из стора
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
+
   const orderInfo = useMemo(() => {
-    // Если ингредиенты ещё не загружены, используем пустой массив
-    const ingredientsInfo = (order.ingredients ?? [])
+    if (!ingredients.length) return null;
+
+    // собираем ингредиенты заказа
+    const ingredientsInfo: TIngredient[] = order.ingredients
       .map((id) => ingredients.find((ing) => ing._id === id))
-      .filter((ing): ing is TIngredient => !!ing);
+      .filter(Boolean) as TIngredient[];
+
+    // считаем общую сумму
+    const total = ingredientsInfo.reduce((sum, item) => sum + item.price, 0);
+
+    // берем первые maxIngredients ингредиентов для показа в карточке
+    const ingredientsToShow = ingredientsInfo.slice(0, maxIngredients);
+
+    // сколько ингредиентов скрыто
+    const remains =
+      ingredientsInfo.length > maxIngredients
+        ? ingredientsInfo.length - maxIngredients
+        : 0;
+
+    const date = new Date(order.createdAt);
 
     return {
       ...order,
       ingredientsInfo,
-      ingredientsToShow: ingredientsInfo.slice(0, maxIngredients),
-      remains: Math.max(0, ingredientsInfo.length - maxIngredients),
-      total: ingredientsInfo.reduce((sum, ing) => sum + ing.price, 0),
-      date: new Date(order.createdAt)
+      ingredientsToShow,
+      remains,
+      total,
+      date
     };
   }, [order, ingredients]);
 
@@ -40,4 +54,4 @@ export const OrderCard: FC<OrderCardProps> = ({ order }) => {
       locationState={{ background: location }}
     />
   );
-};
+});
