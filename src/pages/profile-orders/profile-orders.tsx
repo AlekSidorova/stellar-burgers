@@ -1,10 +1,23 @@
+import { FC, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import { RootState } from '../../services/store';
+import { fetchUserOrdersThunk } from '../../features/orders/orders-slice';
+import { fetchIngredientsThunk } from '../../features/ingredients/ingredients-slice';
 import { ProfileOrdersUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useAppDispatch();
+  const { userOrders, userOrdersLoading } = useAppSelector(
+    (state: RootState) => state.orders
+  );
+  const { ingredients } = useAppSelector(
+    (state: RootState) => state.ingredients
+  );
 
-  return <ProfileOrdersUI orders={orders} />;
+  useEffect(() => {
+    if (!ingredients.length) dispatch(fetchIngredientsThunk());
+    dispatch(fetchUserOrdersThunk());
+  }, [dispatch, ingredients.length]);
+
+  return <ProfileOrdersUI orders={userOrders} isLoading={userOrdersLoading} />;
 };
