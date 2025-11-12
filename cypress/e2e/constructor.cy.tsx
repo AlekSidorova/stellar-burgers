@@ -14,7 +14,7 @@ describe('Конструктор бургеров', () => {
   });
 
   it('должен отображать список ингредиентов', () => {
-    //ищем элементы по селектору, проверяем, что их 3
+    //ищем элементы, проверяем, что их 3
     cy.get('[data-cy="ingredient"]').should('have.length', 3);
     //ищем на странице текст-проверяем, что они отображаются в UI
     cy.get('[data-cy="ingredient"]').contains('Краторная булка N-200i');
@@ -22,5 +22,32 @@ describe('Конструктор бургеров', () => {
       'Биокотлета из марсианской Магнолии'
     );
     cy.get('[data-cy="ingredient"]').contains('Соус Spicy-X');
+  });
+
+  it('добавляет булку в конструктор', () => {
+    //кликаем на булку
+    cy.get('[data-cy="ingredient"]')
+      .contains('Краторная булка N-200i')
+      .closest('[data-cy="ingredient"]') // поднимаемся к <li>
+      .find('button') //ищем кнопку внутри этого <li>
+      .click();
+    //проверяем верхнюю и нижнюю булку
+    cy.get('[data-cy="constructor-bun-top"]').should('exist');
+    cy.get('[data-cy="constructor-bun-bottom"]').should('exist');
+  });
+
+  it('добавляет начинку в конструктор', () => {
+    //кликаем на первую начинку
+    cy.get('[data-cy="ingredient"]')
+      .contains('Биокотлета из марсианской Магнолии')
+      .closest('[data-cy="ingredient"]')
+      .find('button')
+      .click();
+    //проверяем, что начинка появилась
+    cy.get('[data-cy="constructor-ingredient"]').should('have.length', 1);
+    cy.get('[data-cy="constructor-ingredient"]').should(
+      'contain',
+      'Биокотлета из марсианской Магнолии'
+    );
   });
 });
