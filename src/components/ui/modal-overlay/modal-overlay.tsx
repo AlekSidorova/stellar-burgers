@@ -1,5 +1,9 @@
 import styles from './modal-overlay.module.css';
 
-export const ModalOverlayUI = ({ onClick }: { onClick: () => void }) => (
-  <div className={styles.overlay} onClick={onClick} />
+type TModalOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
+  onClick: () => void;
+};
+
+export const ModalOverlayUI = ({ onClick, ...props }: TModalOverlayProps) => (
+  <div className={styles.overlay} onClick={onClick} {...props} />
 );
