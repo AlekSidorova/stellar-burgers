@@ -3,7 +3,7 @@
 describe('Конструктор бургеров', () => {
   //выполняем ДО
   beforeEach(() => {
-    //перехватываем сетевые запросы-возвращаем наш моковый файл ingredients.json
+    //мок на ингредиенты
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );

@@ -95,22 +95,17 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         size='large'
         onClick={onOrderClick}
         data-cy='order-button'
+        disabled={orderRequest}
       >
-        Оформить заказ
+        {orderRequest ? 'Оформляем заказ...' : 'Оформить заказ'}
       </Button>
     </div>
 
-    {/* ОДНА модалка: либо прелоадер, либо детали заказа */}
-    {orderRequest ? (
-      <Modal onClose={closeOrderModal} title='Оформляем заказ...'>
-        <Preloader />
+    {/* Финальная модалка */}
+    {orderModalData && (
+      <Modal onClose={closeOrderModal} title='Ваш заказ оформлен'>
+        <OrderDetailsUI orderNumber={orderModalData.number} />
       </Modal>
-    ) : (
-      orderModalData && (
-        <Modal onClose={closeOrderModal} title='Ваш заказ оформлен'>
-          <OrderDetailsUI orderNumber={orderModalData.number} />
-        </Modal>
-      )
     )}
   </section>
 );
