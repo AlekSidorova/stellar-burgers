@@ -55,4 +55,16 @@ describe('Модальные окна ингредиентов', () => {
     //проверяем, что модалка закрылась
     cy.get('[data-cy="modal"]').should('not.exist');
   });
+
+  it('закрыть модалку клавишей Esc', () => {
+    //выбираем первый ингредиент и кликаем
+    cy.get('[data-cy="ingredient"]').first().click();
+    cy.get('[data-cy="modal"]').should('be.visible');
+
+    //имитируем нажатие клавиши Escape
+    cy.get('body').type('{esc}');
+
+    //проверяем, что модалка закрылась
+    cy.get('[data-cy="modal"]').should('not.exist');
+  });
 });
