@@ -49,7 +49,7 @@ describe('Оформление заказа', () => {
     window.localStorage.setItem('refreshToken', 'mockRefreshToken');
 
     //открываем страницу
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.wait('@getIngredients');
   });
 
