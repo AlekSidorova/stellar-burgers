@@ -50,4 +50,10 @@ describe('Конструктор бургеров', () => {
       'Биокотлета из марсианской Магнолии'
     );
   });
+
+  it('удаление ингредиента из пустого конструктора не ломает UI', () => {
+    cy.get('[data-cy="constructor-list"] li').should('have.length', 0);
+    // попытка удалить несуществующий элемент
+    cy.get('[data-cy="constructor-ingredient-remove"]').should('not.exist');
+  });
 });
