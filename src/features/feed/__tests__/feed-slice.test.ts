@@ -100,7 +100,7 @@ describe('ws редьюесеры в feedSlice', () => {
 //тесты редьюсов ДЛЯ асинхронного действия
 describe('fetchFeedOrdersThunk extraReducers', () => {
   //тест проверяет, что происходит, когда действие pending (загрузка начинается) выполняется
-  test('Pending - когда загрузка начинается', () => {
+  test('pending-когда загрузка начинается', () => {
     //начальное состояние
     initialState.error = 'Ошибка';
 
@@ -115,7 +115,7 @@ describe('fetchFeedOrdersThunk extraReducers', () => {
   });
 
   //что происходит, когда данные загружены успешно (action типа fulfilled
-  test('Fulfilled - данные успешно загружены', () => {
+  test('fulfilled-данные успешно загружены', () => {
     const payload = {
       success: true,
       orders: mockOrders,
@@ -136,7 +136,7 @@ describe('fetchFeedOrdersThunk extraReducers', () => {
   });
 
   //что происходит если success в payload равен false
-  test('Fulfilled с ошибкой', () => {
+  test('fulfilled с ошибкой', () => {
     const payload = { success: false };
     const action = { type: fetchFeedOrdersThunk.fulfilled.type, payload };
     const state = reducer(initialState, action);
@@ -147,7 +147,7 @@ describe('fetchFeedOrdersThunk extraReducers', () => {
   });
 
   //что происходит, когда действие rejected (загрузка не удалась) выполняется
-  test('Rejected - ошибка загрузки', () => {
+  test('rejected-ошибка загрузки', () => {
     const action = {
       type: fetchFeedOrdersThunk.rejected.type,
       payload: 'Ошибка загрузки'
@@ -159,7 +159,7 @@ describe('fetchFeedOrdersThunk extraReducers', () => {
   });
 
   //что происходит, если действие rejected без сообщения об ошибке
-  test('Rejected без сообщения', () => {
+  test('rejected без сообщения', () => {
     const action = { type: fetchFeedOrdersThunk.rejected.type };
     const state = reducer(initialState, action);
 

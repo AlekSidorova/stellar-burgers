@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for features/ingredients/ingredients-slice.ts</title>
+    <title>Code coverage report for features/constructor/constructor-slice.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">features/ingredients</a> ingredients-slice.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">features/constructor</a> constructor-slice.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.47% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>43/46</span>
+                <span class='fraction'>67/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.47% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>43/46</span>
+                <span class='fraction'>67/67</span>
             </div>
         
             
@@ -109,28 +109,29 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -150,57 +151,119 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { TIngredient } from '@utils-types';
-import { getIngredientsApi } from '../../utils/burger-api';
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { AppDispatch } from '../../services/store';
 &nbsp;
-interface IngredientsState {
-  ingredients: TIngredient[];
-  isLoading: boolean;
-  error: string | null;
-}
-&nbsp;
-const initialState: IngredientsState = {
-  ingredients: [],
-  isLoading: false,
-  error: null
+type TConstructorState = {
+  bun: TConstructorIngredient | null;
+  ingredients: TConstructorIngredient[];
 };
 &nbsp;
-export const fetchIngredientsThunk = createAsyncThunk(
-  'ingredients/fetchIngredients',
-  async () =&gt; {
-<span class="cstat-no" title="statement not covered" >    const ingredients = await getIngredientsApi();</span>
-<span class="cstat-no" title="statement not covered" >    return ingredients;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-);
+const initialState: TConstructorState = {
+  bun: null,
+  ingredients: []
+};
 &nbsp;
-const ingredientsSlice = createSlice({
-  name: 'ingredients',
+const constructorSlice = createSlice({
+  name: 'burgerConstructor',
   initialState,
-  reducers: {},
-  extraReducers: (builder) =&gt; {
-    builder
-      .addCase(fetchIngredientsThunk.pending, (state) =&gt; {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchIngredientsThunk.fulfilled, (state, action) =&gt; {
-        state.isLoading = false;
-        state.ingredients = action.payload;
-      })
-      .addCase(fetchIngredientsThunk.rejected, (state, action) =&gt; {
-        state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки';
-      });
+  reducers: {
+    addIngredient: (state, action: PayloadAction&lt;TConstructorIngredient&gt;) =&gt; {
+      const ingredient = action.payload;
+&nbsp;
+      if (ingredient.type === 'bun') {
+        state.bun = ingredient;
+      } else {
+        state.ingredients.push(ingredient);
+      }
+    },
+&nbsp;
+    removeIngredient: (state, action: PayloadAction&lt;string&gt;) =&gt; {
+      state.ingredients = state.ingredients.filter(
+        (item) =&gt; item.id !== action.payload
+      );
+    },
+&nbsp;
+    moveIngredient: (
+      state,
+      action: PayloadAction&lt;{ fromIndex: number; toIndex: number }&gt;
+    ) =&gt; {
+      const { fromIndex, toIndex } = action.payload;
+      const ingredient = state.ingredients.splice(fromIndex, 1)[0];
+      state.ingredients.splice(toIndex, 0, ingredient);
+    },
+&nbsp;
+    clearConstructor: (state) =&gt; {
+      state.bun = null;
+      state.ingredients = [];
+    }
   }
 });
 &nbsp;
-export default ingredientsSlice.reducer;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveIngredient,
+  clearConstructor
+} = constructorSlice.actions;
+&nbsp;
+export default constructorSlice.reducer;
+&nbsp;
+export const addIngredientWithId =
+  (ingredient: TIngredient) =&gt; (dispatch: AppDispatch) =&gt; {
+    const ingredientWithId: TConstructorIngredient = {
+      ...ingredient,
+      id: crypto.randomUUID()
+    };
+    dispatch(addIngredient(ingredientWithId));
+  };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

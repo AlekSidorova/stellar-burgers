@@ -48,7 +48,7 @@ beforeEach(() => {
 
 describe('fetchIngredientsThunk extraReducers', () => {
   //проверяет, что происходит, когда действие fetchIngredientsThunk.pending выполняется
-  test('pending - когда загрузка начинается', () => {
+  test('pending-когда загрузка начинается', () => {
     initialState.error = 'Ошибка';
 
     const action = { type: fetchIngredientsThunk.pending.type };
@@ -60,7 +60,7 @@ describe('fetchIngredientsThunk extraReducers', () => {
   });
 
   //что происходит, когда данные успешно загружены (действие fulfilled)
-  test('fulfilled - когда данные успешно загружены', () => {
+  test('fulfilled-когда данные успешно загружены', () => {
     const action = {
       type: fetchIngredientsThunk.fulfilled.type,
       payload: mockIngredients
@@ -74,7 +74,7 @@ describe('fetchIngredientsThunk extraReducers', () => {
   });
 
   //то происходит, когда возникает ошибка при загрузке (действие rejected)
-  test('rejected - когда произошла ошибка', () => {
+  test('rejected-когда произошла ошибка', () => {
     const action = {
       type: fetchIngredientsThunk.rejected.type,
       error: { message: 'Ошибка загрузки данных' }
