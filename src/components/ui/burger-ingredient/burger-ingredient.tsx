@@ -12,7 +12,8 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
     const { image, price, name } = ingredient;
 
     return (
-      <li className={styles.container}>
+      //вставляем data-cy для тестов
+      <li className={styles.container} data-cy='ingredient'>
         {count && <Counter count={count} />}
         <img className={styles.img} src={image} alt={name} />
         <div className={`${styles.cost} mt-2 mb-2`}>

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { orderBurgerApi, getOrdersApi } from '../../utils/burger-api';
-import { getCookie } from '../../utils/cookie';
 import { TOrder } from '../../utils/types';
 
 interface OrderState {
@@ -79,7 +78,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.orderNumber = action.payload.number; // <-- теперь точно есть
+        state.orderNumber = action.payload.number;
         state.userOrders = [action.payload.order, ...state.userOrders];
       })
       .addCase(createOrder.rejected, (state) => {
